@@ -1,0 +1,6 @@
+01:21:06.544 [main] ERROR pl.ttpsc.javaupdate.project.ConsoleApplication - error
+01:21:06.545 [main] INFO  pl.ttpsc.javaupdate.project.ConsoleApplication - This is an info message.
+01:21:06.545 [main] WARN  pl.ttpsc.javaupdate.project.ConsoleApplication - This is a warning message.
+02:06:18.374 [main] INFO  pl.ttpsc.javaupdate.project.persistence.sql.SqlService - INSERT INTO user (name) VALUES ('name')
+02:09:03.107 [main] INFO  pl.ttpsc.javaupdate.project.persistence.sql.SqlService - INSERT INTO user (name) VALUES ('name')
+02:15:36.733 [main] INFO  pl.ttpsc.javaupdate.project.persistence.sql.SqlService - INSERT INTO project (id, name) VALUES (1, 'proj')

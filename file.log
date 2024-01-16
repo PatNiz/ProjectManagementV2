@@ -1,0 +1,9 @@
+2024-01-16 00:57:55 ERROR ConsoleApplication:33 - error
+2024-01-16 00:57:55 INFO  ConsoleApplication:34 - This is an info message.
+2024-01-16 00:57:55 WARN  ConsoleApplication:35 - This is a warning message.
+2024-01-16 00:58:07 ERROR ConsoleApplication:33 - error
+2024-01-16 00:58:07 INFO  ConsoleApplication:34 - This is an info message.
+2024-01-16 00:58:07 WARN  ConsoleApplication:35 - This is a warning message.
+2024-01-16 00:58:18 ERROR ConsoleApplication:33 - error
+2024-01-16 00:58:18 INFO  ConsoleApplication:34 - This is an info message.
+2024-01-16 00:58:18 WARN  ConsoleApplication:35 - This is a warning message.
