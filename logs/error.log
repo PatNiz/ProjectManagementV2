@@ -1,1 +1,85 @@
-01:21:06.544 [main] ERROR pl.ttpsc.javaupdate.project.ConsoleApplication - error
+15:07:10.980 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: kolumna "username" nie istnieje
+  Position: 29
+15:09:47.401 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: kolumna "username" nie istnieje
+  Position: 29
+15:15:25.404 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: kolumna "username" nie istnieje
+  Position: 29
+17:46:15.246 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - null
+17:46:50.729 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - null
+12:52:19.072 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Batch entry 0 INSERT INTO user_roles (project_id, user_id, role) VALUES (1, 1, 'MANAGER') was aborted: BŁĄD: wstawianie lub modyfikacja na tabeli "user_roles" narusza klucz obcy "fk_project"
+  Detail: Klucz (project_id)=(1) nie występuje w tabeli "project".  Call getNextException to see other errors in the batch.
+12:54:00.432 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Batch entry 0 INSERT INTO user_roles (project_id, user_id, role) VALUES (1, 1, 'MANAGER') was aborted: BŁĄD: wstawianie lub modyfikacja na tabeli "user_roles" narusza klucz obcy "fk_project"
+  Detail: Klucz (project_id)=(1) nie występuje w tabeli "project".  Call getNextException to see other errors in the batch.
+12:54:00.458 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: relacja "companyuser" nie istnieje
+  Position: 13
+12:55:32.890 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Batch entry 0 INSERT INTO user_roles (project_id, user_id, role) VALUES (1, 1, 'MANAGER') was aborted: BŁĄD: wstawianie lub modyfikacja na tabeli "user_roles" narusza klucz obcy "fk_project"
+  Detail: Klucz (project_id)=(1) nie występuje w tabeli "project".  Call getNextException to see other errors in the batch.
+12:58:44.825 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: kolumna "creatorid" relacji "project" nie istnieje
+  Position: 32
+12:58:44.863 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Batch entry 0 INSERT INTO user_roles (project_id, user_id, role) VALUES (1, 1, 'MANAGER') was aborted: BŁĄD: wstawianie lub modyfikacja na tabeli "user_roles" narusza klucz obcy "fk_project"
+  Detail: Klucz (project_id)=(1) nie występuje w tabeli "project".  Call getNextException to see other errors in the batch.
+13:03:46.878 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Batch entry 0 INSERT INTO user_roles (project_id, user_id, role) VALUES (1, 1, 'MANAGER') was aborted: BŁĄD: null value in column "id" of relation "user_roles" violates not-null constraint
+  Detail: Niepoprawne ograniczenia wiersza (null, 1, 1, MANAGER).  Call getNextException to see other errors in the batch.
+13:07:01.063 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Batch entry 0 INSERT INTO user_roles (project_id, user_id, role) VALUES (1, 1, 'MANAGER') was aborted: BŁĄD: null value in column "id" of relation "user_roles" violates not-null constraint
+  Detail: Niepoprawne ograniczenia wiersza (null, 1, 1, MANAGER).  Call getNextException to see other errors in the batch.
+13:19:28.420 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: podwójna wartość klucza narusza ograniczenie unikalności "document_pkey"
+  Detail: Klucz (id)=(1) już istnieje.
+13:38:05.851 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Batch entry 0 INSERT INTO user_roles (project_id, user_id, role) VALUES (1, 1, 'MANAGER') was aborted: BŁĄD: wstawianie lub modyfikacja na tabeli "user_roles" narusza klucz obcy "fk_project"
+  Detail: Klucz (project_id)=(1) nie występuje w tabeli "project".  Call getNextException to see other errors in the batch.
+13:43:03.825 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Batch entry 0 INSERT INTO user_roles (project_id, user_id, role) VALUES (1, 1, 'MANAGER') was aborted: BŁĄD: wstawianie lub modyfikacja na tabeli "user_roles" narusza klucz obcy "fk_project"
+  Detail: Klucz (project_id)=(1) nie występuje w tabeli "project".  Call getNextException to see other errors in the batch.
+13:43:33.328 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: podwójna wartość klucza narusza ograniczenie unikalności "companyuser_pkey"
+  Detail: Klucz (id)=(1) już istnieje.
+13:43:33.390 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: podwójna wartość klucza narusza ograniczenie unikalności "project_pkey"
+  Detail: Klucz (id)=(1) już istnieje.
+13:43:33.418 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: podwójna wartość klucza narusza ograniczenie unikalności "companyuser_pkey"
+  Detail: Klucz (id)=(2) już istnieje.
+20:04:16.464 [main] ERROR pl.ttpsc.javaupdate.project.action.projectActions.CreateProjectAction - User with ID 2 is not an administrator and cannot create projects.
+21:07:52.860 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: podwójna wartość klucza narusza ograniczenie unikalności "project_pkey"
+  Detail: Klucz (id)=(1) już istnieje.
+21:09:22.625 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: podwójna wartość klucza narusza ograniczenie unikalności "companyuser_pkey"
+  Detail: Klucz (id)=(3) już istnieje.
+21:09:25.816 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: podwójna wartość klucza narusza ograniczenie unikalności "companyuser_pkey"
+  Detail: Klucz (id)=(3) już istnieje.
+21:09:41.393 [main] ERROR pl.ttpsc.javaupdate.project.action.projectActions.CreateProjectAction - User with ID 3 is not an administrator and cannot create projects.
+21:10:25.268 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: podwójna wartość klucza narusza ograniczenie unikalności "companyuser_pkey"
+  Detail: Klucz (id)=(3) już istnieje.
+21:57:19.173 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: nieprawidłowa składnia wejścia dla typu bigint: "null"
+  Position: 123
+23:19:26.482 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: podwójna wartość klucza narusza ograniczenie unikalności "companyuser_pkey"
+  Detail: Klucz (id)=(1) już istnieje.
+23:34:32.439 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: kolumna "id" jest typu bigint ale wyrażenie jest typu character varying
+  Hint: Będziesz musiał przepisać lub rzutować wyrażenie.
+  Position: 51
+23:40:04.024 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: kolumna "id" jest typu bigint ale wyrażenie jest typu character varying
+  Hint: Będziesz musiał przepisać lub rzutować wyrażenie.
+  Position: 51
+00:01:28.825 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - BŁĄD: null value in column "id" of relation "companyuser" violates not-null constraint
+  Detail: Niepoprawne ograniczenia wiersza (null, userHR, pass).
+00:48:57.447 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:48:57.453 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:48:57.473 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:48:57.479 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:48:57.482 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:48:57.485 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:49:52.155 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:49:52.160 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:49:52.179 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:49:52.185 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:49:52.188 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:49:52.193 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:51:42.683 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:51:42.690 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:51:42.713 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:51:42.719 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:51:42.723 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:51:42.727 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:53:34.999 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:53:35.005 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:53:35.024 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:53:35.031 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:53:56.609 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:53:56.614 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:53:56.633 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:53:56.639 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+00:55:39.067 [main] ERROR pl.ttpsc.javaupdate.project.persistence.sql.SqlService - Unable to parse URL jdbc:postgresql://null:null/null?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true

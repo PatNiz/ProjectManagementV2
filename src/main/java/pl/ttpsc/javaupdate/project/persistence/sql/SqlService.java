@@ -1,205 +1,257 @@
+/**
+ * Created By: Patryk Niziołek
+ * Created in: 2022
+ * Updated in: 2024
+ */
 package pl.ttpsc.javaupdate.project.persistence.sql;
 
 
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.slf4j.LoggerFactory;
-import pl.ttpsc.javaupdate.project.ConsoleApplication;
-import pl.ttpsc.javaupdate.project.persistence.Criteria;
-import pl.ttpsc.javaupdate.project.persistence.Criterion;
+import lombok.extern.log4j.Log4j2;
+import pl.ttpsc.javaupdate.project.exception.IdGenerationException;
+import pl.ttpsc.javaupdate.project.model.CompanyUser;
+import pl.ttpsc.javaupdate.project.model.Role;
 import pl.ttpsc.javaupdate.project.persistence.Persistable;
+import pl.ttpsc.javaupdate.project.persistence.QuerySpec;
 
-import java.lang.reflect.Constructor;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Scanner;
+import java.util.*;
 
+@Log4j2
 public class SqlService {
-    static final Logger LOGGER = LogManager.getLogger(SqlService.class);
-    public void createTable(Class objectClass) throws SQLException {
-        String className = objectClass.getSimpleName();
-        Field[] fields = objectClass.getDeclaredFields();
-        StringBuilder sb= new StringBuilder("DROP TABLE IF EXISTS "+className+";");
-        sb.append(" CREATE TABLE " + className + "(");
-        for (Field field : fields) {
-            String fieldName = field.getName();
-            Class fieldType = field.getType();
-            String fieldTypeInDatabase = mapJavaTypeToDatabaseType(fieldType);
-            sb.append(fieldName).append(" ").append(fieldTypeInDatabase).append(", ");
-        }
-        sb.delete(sb.length() - 2, sb.length()).append(")");
-        System.out.println(sb);
-        try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.executeUpdate(sb.toString());
-        }
-    }
-    public void dropTable(Class persistenceClass) throws SQLException {
-        StringBuilder sb = new StringBuilder("DROP TABLE IF EXISTS ");
-        sb.append(persistenceClass.getSimpleName());
-        System.out.println(sb);
-        try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.executeUpdate(sb.toString());
-        }
-    }
-    protected static List<Persistable> read(Criteria criteria) throws SQLException {
-        Connection connection = getConnection();
-        StringBuilder sql = new StringBuilder("SELECT * FROM " + criteria.getClassType().getSimpleName() + " WHERE 1=1");
-        for (Criterion criterion : criteria.getCriteria()) {
-            sql.append(" AND ");
-            sql.append(criterion.getColumnName());
-            sql.append(" ");
-            sql.append(criterion.getOperator().getSqlOperator());
-            sql.append(" '");
-            sql.append(criterion.getValue());
-            sql.append("'");
-        }
-        PreparedStatement statement = connection.prepareStatement(sql.toString());
-        ResultSet resultSet = statement.executeQuery();
-        List<Persistable> persistableObjects = new ArrayList<>();
-        while (resultSet.next()) {
-            try {
-                Constructor<?> constructor = criteria.getClassType().getConstructor();
-                Persistable persistableObject = (Persistable) constructor.newInstance();
-                for (Field field : criteria.getClassType().getDeclaredFields()) {
-                    field.setAccessible(true);
-                    field.set(persistableObject, resultSet.getObject(field.getName()));
-                }
-                persistableObjects.add(persistableObject);
-            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException |
-                     InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return persistableObjects;
-    }
+    private static final String CONFIG_FILE = "database.properties";
     protected static void insert(Persistable persistableObject) {
         try (Connection conn = getConnection()) {
             String tableName = persistableObject.getClass().getSimpleName().toLowerCase();
             StringBuilder columnNames = new StringBuilder();
-            StringBuilder values = new StringBuilder();
+            StringBuilder placeholders = new StringBuilder();
+            List<Object> values = new ArrayList<>();
             for (Field field : persistableObject.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 columnNames.append(field.getName()).append(", ");
-                if (field.getType() == String.class) {
-                    values.append("'").append(field.get(persistableObject)).append("', ");
-                } else {
-                    values.append(field.get(persistableObject)).append(", ");
-                }
+                placeholders.append("?, ");
+                values.add(field.get(persistableObject));
+
             }
             columnNames.setLength(columnNames.length() - 2);
-            values.setLength(values.length() - 2);
+            placeholders.setLength(placeholders.length() - 2);
 
-            String sql = "INSERT INTO " + tableName + " (" + columnNames + ") VALUES (" + values + ")";
-            System.out.println(sql);
-            LOGGER.info(sql);
-            Statement statement = conn.createStatement();
-            statement.executeUpdate(sql);
+            String sql = "INSERT INTO " + tableName + " (" + columnNames + ") VALUES (" + placeholders + ")";
+            log.info(sql);
+
+            try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                for (int i = 0; i < values.size(); i++) {
+                    if (values.get(i) instanceof Object[]) {
+                        statement.setArray(i + 1, conn.createArrayOf("VARCHAR", (Object[]) values.get(i)));
+                    } else {
+                        statement.setObject(i + 1, values.get(i));
+                    }
+                }
+                statement.executeUpdate();
+            }
         } catch (Exception e) {
+            log.error(e.getMessage());
             e.printStackTrace();
         }
     }
-    protected static void delete(Persistable object) throws SQLException {
-        String className = object.getClass().getSimpleName();
-        Field[] fields = object.getClass().getDeclaredFields();
-        StringBuilder query = new StringBuilder("DELETE FROM " + className + " WHERE ");
-        for (Field field : fields) {
-            String fieldName = field.getName();
-            field.setAccessible(true);
-            Object fieldValue;
-            try {
-                fieldValue = field.get(object);
-            } catch (IllegalAccessException e) {
-                throw new SQLException(e);
-            }
-            query.append(fieldName).append(" = ").append("'").append(fieldValue).append("'").append(" AND ");
-        }
-        query.delete(query.length() - 5, query.length());
-        System.out.println(query);
+
+    // Helper method to generate ID
+
+    public static <T extends Persistable> List<T> find(QuerySpec querySpec) {
+        List<T> entities = new ArrayList<>();
+        Class<T> entityType = querySpec.getEntityType();
+
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
-            statement.executeUpdate(query.toString());
-        }
-    }
-    public static void update(int id, Persistable object) throws SQLException {
-        StringBuilder sb = new StringBuilder("UPDATE ");
-        sb.append(object.getClass().getSimpleName());
-        sb.append(" SET ");
-        Field[] declaredFields = object.getClass().getDeclaredFields();
-        System.out.println("Update "+object.getClass().getSimpleName()+" with id="+id);
-        System.out.println("Give new data");
-        for (Field declaredField : declaredFields) {
 
-
-            if(declaredField.getName()!="id") {
-                sb.append(declaredField.getName());
-                sb.append("=");
-                System.out.println(declaredField.getName());
-                if (declaredField.getType().getSimpleName().equals("String")) {
-                    String updatedRow = new Scanner(System.in).nextLine();
-                    sb.append("'");
-                    sb.append(updatedRow);
-                    sb.append("'");
-                } else if (declaredField.getType().getSimpleName().equals("Long")) {
-                    Long updatedRow = new Scanner(System.in).nextLong();
-                    sb.append(updatedRow);
-                } else if (declaredField.getType().getSimpleName().equals("Boolean")) {
-                    Boolean updatedRow = new Scanner(System.in).nextBoolean();
-                    sb.append(updatedRow);
-                } else if (declaredField.getType().getSimpleName().equals("int")) {
-                    Integer updatedRow = new Scanner(System.in).nextInt();
-                    sb.append(updatedRow);
+            String selectQuery = querySpec.createSQLSelectQuery();
+            ResultSet resultSet = statement.executeQuery(selectQuery);
+            while (resultSet.next()) {
+                T entity = entityType.getDeclaredConstructor().newInstance();
+                Field[] fields = entityType.getDeclaredFields();
+                for (Field field : fields) {
+                    field.setAccessible(true);
+                    String fieldName = field.getName();
+                    Object fieldValue = resultSet.getObject(fieldName);
+                    field.set(entity, fieldValue);
                 }
-                sb.append(",");
+
+                entities.add(entity);
             }
+        } catch (SQLException | ReflectiveOperationException e) {
+            e.printStackTrace();
+
         }
-        sb.deleteCharAt(sb.length()-1);
-        sb.append(" WHERE id =");
-        sb.append(id);
-        System.out.println(sb);
+
+        return entities;
+    }
+    public static void update(Persistable persistable) {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
-            statement.executeUpdate(String.valueOf(sb));
+            Class<?> clazz = persistable.getClass();
+            String tableName = clazz.getSimpleName();
+            Field[] fields = clazz.getDeclaredFields();
+            StringBuilder updateQuery = new StringBuilder("UPDATE " + tableName + " SET ");
+            for (Field field : fields) {
+                field.setAccessible(true);
+                String fieldName = field.getName();
+                Object fieldValue;
+                try {
+                    fieldValue = field.get(persistable);
+                    updateQuery.append(fieldName).append(" = '").append(fieldValue).append("', ");
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+            updateQuery.deleteCharAt(updateQuery.length() - 2);
+            updateQuery.append(" WHERE id = ").append(persistable.getId());
+            statement.executeUpdate(updateQuery.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
-    private String mapJavaTypeToDatabaseType(Class fieldType) {
-        if (fieldType == int.class || fieldType == Integer.class) {
-            return "INTEGER";
-        } else if (fieldType == String.class) {
-            return "VARCHAR(255)";
-        } else if (fieldType == boolean.class || fieldType == Boolean.class) {
-            return "BOOLEAN";
-        } else if (fieldType == float.class || fieldType == Float.class) {
-            return "FLOAT";
-        } else if (fieldType == double.class || fieldType == Double.class) {
-            return "DOUBLE";
-        }else if (fieldType == java.util.List.class) {
-            return "JSONB";
-        }
-        else if (Persistable.class.isAssignableFrom(fieldType)) {
-            return "JSONB";
-        }else {
-            throw new UnsupportedOperationException("Unsupported field type: " + fieldType);
+    protected static void delete(Persistable persistable) {
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()) {
+            Class<?> clazz =persistable.getClass();
+            String tableName = clazz.getSimpleName();
+            String deleteQuery = "DELETE FROM " + tableName + " WHERE id = " + persistable.getId();
+            statement.executeUpdate(deleteQuery);
+        } catch (SQLException e) {
+            e.printStackTrace();
+
         }
     }
-    private static Connection getConnection() throws SQLException {
+    public static Long generateId(Persistable persistable) {
+        Class<?> clazz = persistable.getClass();
+        String tableName = clazz.getSimpleName();
+        String sql = "SELECT COALESCE(MAX(id), 0) + 1 FROM " + tableName;
+
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+            if (resultSet.next()) {
+                try {
+                    Field idField = clazz.getDeclaredField("id");
+                    idField.setAccessible(true);
+                    Long generatedId = resultSet.getLong(1);
+                    idField.set(persistable, generatedId);
+                    return generatedId;
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    throw new IdGenerationException("Failed to generate ID for table: " + tableName, e);
+                }
+            } else {
+                throw new RuntimeException("Failed to generate ID for table: " + tableName);
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+            throw new IdGenerationException("Error while generating ID", e);
+        }
+    }
+    public static List<Role> getUserRolesOnProject(CompanyUser user, Long projectId) {
+        List<Role> roles = new ArrayList<>();
+
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT role FROM user_roles WHERE user_id = ? AND project_id = ?")) {
+
+            preparedStatement.setLong(1, user.getId());
+            preparedStatement.setLong(2, projectId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    String roleName = resultSet.getString("role");
+                    roles.add(Role.valueOf(roleName));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+
+        return roles.isEmpty() ? Collections.EMPTY_LIST : roles;
+    }
+    public static void saveProjectRoles(Long projectId, Long userId, List<Role> roles)  {
+        String insertRolesQuery = "INSERT INTO user_roles (project_id, user_id, role) VALUES (?, ?, ?)";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(insertRolesQuery)) {
+            for (Role role : roles) {
+                preparedStatement.setLong(1, projectId);
+                preparedStatement.setLong(2, userId);
+                preparedStatement.setString(3, role.name());
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+    }
+    public static void giveAdministratorRole(Long userId) {
+        String insertAdministratorQuery = "INSERT INTO administrator (user_id) VALUES (?)";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(insertAdministratorQuery)) {
+            preparedStatement.setLong(1, userId);
+            preparedStatement.executeUpdate();
+            log.info("Administrator role saved successfully for user with ID: " + userId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            log.error("Error saving administrator role.");
+        }
+    }
+
+    public static List<Map<String, Object>> getProjectDetails(long projectId) {
+        List<Map<String, Object>> projectDetails = new ArrayList<>();
+
+        try (Connection connection = getConnection()) {
+            // Zapytanie SQL
+            String sql = "SELECT pr.id AS project_id, pr.name AS project_name, ur.user_id, cu.username, ur.role " +
+                    "FROM user_roles ur " +
+                    "JOIN project pr ON ur.project_id = pr.id " +
+                    "JOIN companyuser cu ON ur.user_id = cu.id " +
+                    "WHERE ur.project_id = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setLong(1, projectId);
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    // Przetwarzanie wyników
+                    while (resultSet.next()) {
+                        Map<String, Object> detail = new HashMap<>();
+                        detail.put("project_id", resultSet.getLong("project_id"));
+                        detail.put("project_name", resultSet.getString("project_name"));
+                        detail.put("user_id", resultSet.getLong("user_id"));
+                        detail.put("username", resultSet.getString("username"));
+                        detail.put("role", resultSet.getString("role"));
+
+                        projectDetails.add(detail);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return projectDetails;
+    }
+    public static Connection getConnection() throws SQLException {
+
         Properties connectionProperties = new Properties();
-        String host = System.getenv("DB_HOST");
-        String port = System.getenv("DB_PORT");
-        String database = System.getenv("DB_DATABASE");
-        String username = System.getenv("DB_USERNAME");
-        String password = System.getenv("DB_PASSWORD");
+
+        try (InputStream inputStream = SqlService.class.getClassLoader().getResourceAsStream(CONFIG_FILE)) {
+            connectionProperties.load(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String host = connectionProperties.getProperty("db.host");
+        String port = connectionProperties.getProperty("db.port");
+        String database = connectionProperties.getProperty("db.database");
+        String username = connectionProperties.getProperty("db.username");
+        String password = connectionProperties.getProperty("db.password");
 
         String connectionUrl = "jdbc:postgresql://" + host + ":" + port + "/" + database + "?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
         return DriverManager.getConnection(connectionUrl, username, password);

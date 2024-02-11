@@ -1,3 +1,8 @@
+/**
+ * Created By: Patryk Niziołek
+ * Created in: 2022
+ * Updated in: 2024
+ */
 package pl.ttpsc.javaupdate.project.utility;
 
 public interface MenuComponent {
@@ -15,9 +20,7 @@ public interface MenuComponent {
 
     String getName();
 
-    void getNameWithSeparator();
-
-    default void execute() {
+    default void execute()  {
         throw new UnsupportedOperationException();
     }
 

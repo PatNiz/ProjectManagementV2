@@ -1,45 +1,24 @@
+/**
+ * Created By: Patryk Niziołek
+ * Created in: 2022
+ * Updated in: 2024
+ */
 package pl.ttpsc.javaupdate.project.model;
 
+import lombok.*;
 import pl.ttpsc.javaupdate.project.persistence.Persistable;
 
-import java.util.Set;
-
+@AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
 public class Project implements Persistable {
-    private int id;
+    private Long id;
     private String name;
+    private Long creatorId;
 
-
-    public Project() {
-    }
-    public Project(int id, String name) {
-        this.id = id;
+    public Project( String name) {
         this.name = name;
     }
-
-
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "Project{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
-
 }

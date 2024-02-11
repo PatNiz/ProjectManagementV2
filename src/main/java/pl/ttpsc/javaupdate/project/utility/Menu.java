@@ -1,18 +1,37 @@
+/**
+ * Created By: Patryk Niziołek
+ * Created in: 2022
+ * Updated in: 2024
+ */
 package pl.ttpsc.javaupdate.project.utility;
 
+import lombok.extern.log4j.Log4j2;
+import pl.ttpsc.javaupdate.project.model.CompanyUser;
+
 import java.util.ArrayList;
+
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-
+@Log4j2
 public class Menu implements MenuComponent {
     List<MenuComponent> menuComponents = new ArrayList<MenuComponent>();
     String name;
+    CompanyUser user;
 
     public Menu(String name) {
         this.name = name;
+        this.user = user;
 
+    }
+
+    public CompanyUser getUser() {
+        return user;
+    }
+
+    public void setUser(CompanyUser user) {
+        this.user = user;
     }
 
     public void add(MenuComponent menuComponent) {
@@ -60,10 +79,10 @@ public class Menu implements MenuComponent {
                     selectedOption.execute();
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Invalid choice. Please enter a valid number.");
+                log.info("Invalid choice. Please enter a valid number.");
                 scanner.nextLine();
             } catch (IndexOutOfBoundsException e) {
-                System.out.println("Invalid choice. Please enter a valid number.");
+                log.info("Invalid choice. Please enter a valid number.");
             }
         }
     }

@@ -1,38 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Appenders>
-        <!-- Konsolowy appender dla ERROR -->
+
         <Console name="Console" target="SYSTEM_OUT">
             <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
 
-        <!-- Appender dla logów INFO do pliku info.log -->
-        <File name="InfoFile" fileName="logs/info.log">
+        <Console name="InfoConsole" target="SYSTEM_OUT">
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="%msg%n"/>
+        </Console>
+
+        <File name="InfoFile" fileName="D:\Java PLM Update\Project Management Skeleton v4.1.0\logs\info.log">
             <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
 
-        <!-- Appender dla logów DEBUG do pliku debug.log -->
-        <File name="DebugFile" fileName="logs/debug.log">
+        <File name="DebugFile" fileName="D:\Java PLM Update\Project Management Skeleton v4.1.0\logs\debug.log">
             <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
 
-        <!-- Appender dla logów WARN do pliku warn.log -->
-        <File name="WarnFile" fileName="logs/warn.log">
+        <File name="WarnFile" fileName="D:\Java PLM Update\Project Management Skeleton v4.1.0\logs\warn.log">
             <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
-        <File name="ErrorFile" fileName="logs/error.log">
+        <File name="ErrorFile" fileName="D:\Java PLM Update\Project Management Skeleton v4.1.0\logs\error.log">
             <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
     </Appenders>
 
     <Loggers>
-        <!-- Konfiguracja root loggera -->
+
         <Root level="info">
+            <AppenderRef ref="InfoConsole"/>
             <AppenderRef ref="Console"/>
             <AppenderRef ref="InfoFile"/>
             <AppenderRef ref="DebugFile"/>

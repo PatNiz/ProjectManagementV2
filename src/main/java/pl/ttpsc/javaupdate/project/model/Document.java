@@ -1,52 +1,40 @@
+/**
+ * Created By: Patryk Niziołek
+ * Created in: 2022
+ * Updated in: 2024
+ */
 package pl.ttpsc.javaupdate.project.model;
 
+import lombok.*;
 import pl.ttpsc.javaupdate.project.persistence.Persistable;
-
+@Setter
+@Getter
+@AllArgsConstructor
+@ToString
+@NoArgsConstructor
 public class Document implements Persistable {
 
-    private int id;
-    private String name;
+    private Long id;
+    private String title;
     private String content;
+    private String description;
+    private String topic;
+    private Long creatorid;
+    private Long projectId;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
+    public Document(Long id, String title, String content, String description, String topic, Long projectId) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
+        this.title = title;
         this.content = content;
+        this.description = description;
+        this.topic = topic;
+        this.projectId = projectId;
     }
-
-    @Override
-    public String toString() {
-        return "Document{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", content='" + content + '\'' +
-                '}';
-    }
-
-    public Document() {
-    }
-
-    public Document(int id, String name, String content) {
-        this.id = id;
-        this.name = name;
+    public Document(String title, String content, String description, String topic, Long projectId) {
+        this.title = title;
         this.content = content;
+        this.description = description;
+        this.topic = topic;
+        this.projectId = projectId;
     }
 }

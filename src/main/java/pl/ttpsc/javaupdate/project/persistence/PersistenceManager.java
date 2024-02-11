@@ -1,20 +1,23 @@
+/**
+ * Created By: Patryk Niziołek
+ * Created in: 2022
+ * Updated in: 2024
+ */
 package pl.ttpsc.javaupdate.project.persistence;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
+
 
 public interface PersistenceManager {
 
-	List<Persistable> read(Criteria criteria) throws SQLException, IOException;
 
-	
-	void update(Persistable persistable);
+	public void insert(Persistable persistable);
 
-	void update(Integer id, Persistable persistableObject) throws SQLException;
 
-	void delete(Persistable persistable);
+	public void update(Persistable persistable);
 
-	List<Persistable> find(QuerySpec queySpec);
-      
+	public void delete(Persistable persistable);
+
+	<T extends Persistable> List<T> find(QuerySpec<T> querySpec);
 }
+
